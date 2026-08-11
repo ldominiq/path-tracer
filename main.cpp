@@ -1,44 +1,10 @@
 ﻿#include "color.h"
 #include "ray.h"
 #include "vec3.h"
+#include "sphere.h"
 
 // cmake --build build
 // .\build\Debug\CMakeTarget.exe | set-content image.ppm -encoding String
-
-double hit_sphere(const point3& center, double radius, const ray& r) {
-	/*
-		Q = origin of ray
-		C = center of sphere
-		d = direction of ray
-		r = radius of sphere
-	*/
-	// C-Q
-	vec3 oc = center - r.origin();
-	// a=d⋅d
-	//auto a = dot(r.direction(), r.direction());
-	auto a = r.direction().length_squared();
-
-	// b=−2d⋅(C−Q)
-	//auto b = -2.0 * dot(r.direction(), oc);
-
-	// h=b/−2=d⋅(C−Q)
-	auto h = dot(r.direction(), oc);
-
-	// c=(C−Q)⋅(C−Q)−r^2
-	//auto c = dot(oc, oc) - radius * radius;
-	auto c = oc.length_squared() - radius * radius;
-	//auto discriminant = b * b - 4 * a * c;
-
-	auto discriminant = h * h - a * c;
-
-	if (discriminant < 0) {
-		return -1.0;
-	}
-	else {
-		//return (-b - std::sqrt(discriminant) ) / (2.0*a);
-		return (h - std::sqrt(discriminant)) / a;
-	}
-}
 
 // blendedValue=(1−a)⋅startValue+a⋅endValue,
 color ray_color(const ray& r) {
