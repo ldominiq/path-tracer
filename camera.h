@@ -85,8 +85,8 @@ class camera {
 
 			// calculate the camera defocus disk basis vectors
 			auto defocus_radius = focus_dist * std::tan(degrees_to_radians(defocus_angle / 2));
-			defocus_disk_u = u * defocus_angle;
-			defocus_disk_v = v * defocus_angle;
+			defocus_disk_u = u * defocus_radius;
+			defocus_disk_v = v * defocus_radius;
 		}
 
 		ray get_ray(int i, int j) {
