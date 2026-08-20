@@ -132,4 +132,29 @@ inline vec3 reflect(const vec3& v, const vec3& n) {
 	return v - 2 * dot(v, n) * n;
 }
 
+// snell's law: n * sin(theta) = n' * sin(theta')
+// instead of messing with angles, we build the refracted direction from two pieces:
+// r_out_perp (lies in the surface, perpendicular to n) and r_out_parallel (along n)
+// uv must be a UNIT vector, etai_over_etat is the ratio n/n' (1.0/1.5 entering glass, 1.5 leaving)
+inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) {
+	// for unit vectors a.b = cos(angle between them)
+	// uv points into the surface while n points back out, so dot(uv, n) is negative -> negate uv
+	// fmin clamps float drift that could push this slightly above 1
+	auto cos_theta = std::fmin(dot(-uv, n), 1.0);
+
+	// (uv + cos_theta * n) cancels uv's normal component, leaving only the part lying in the
+	// surface -> for a unit uv that leftover has length sin(theta)
+	// scaling it by n/n' makes its length sin(theta'), which IS snell's law rewritten as vectors
+	vec3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
+
+	// the result has to be a unit vector, so pythagoras gives the missing length:
+	// |parallel|^2 = 1 - |perp|^2 -> negative because it points *through* the surface, opposite n
+	// fabs only guards float drift; it also silently hides total internal reflection
+	// (when etai_over_etat * sin(theta) > 1 there is no valid refraction)
+	vec3 r_out_parallel = -std::sqrt(std::fabs(1.0 - r_out_perp.length_squared())) * n;
+
+	// glue the two halves back together
+	return r_out_perp + r_out_parallel;
+}
+
 #endif
