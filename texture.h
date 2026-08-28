@@ -66,7 +66,7 @@ class image_texture : public texture {
 			v = 1.0 - interval(0, 1).clamp(v); // flip V to image coordinates
 
 			auto i = static_cast<int>(u * image.width());
-			auto j = static_cast<int>(v * image.width());
+			auto j = static_cast<int>(v * image.height());
 			auto pixel = image.pixel_data(i, j);
 
 			auto color_scale = 1.0 / 255.0;
