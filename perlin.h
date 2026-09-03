@@ -37,6 +37,20 @@ class perlin {
 
 			return perlin_interp(c, u, v, w);
 		}
+
+		double turb(const point3& p, double depth) const {
+			auto accum = 0.0;
+			auto temp_p = p;
+			auto weight = 1.0;
+
+			for (int i = 0; i < depth; i++) {
+				accum += weight * noise(temp_p);
+				weight *= 0.5;
+				temp_p *= 2;
+			}
+
+			return std::fabs(accum);
+		}
 	
 
 	private:
