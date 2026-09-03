@@ -126,8 +126,41 @@ void moon() {
 	cam.render(hittable_list(moon));
 }
 
+void moon_and_earth() {
+	hittable_list world;
+
+
+	auto moon_texture = make_shared<image_texture>("moon2k.jpg");
+	auto moon_surface = make_shared<lambertian>(moon_texture);
+
+	auto earth_texture = make_shared<image_texture>("earth2k.jpg");
+	auto earth_surface = make_shared<lambertian>(earth_texture);
+
+	auto moon = make_shared<sphere>(point3(0, -4, 0), 4, moon_surface);
+	auto earth = make_shared<sphere>(point3(0, 10, 0), 10, earth_surface);
+
+	world.add(moon);
+	world.add(earth);
+
+	camera cam;
+
+	cam.aspect_ratio = 16.0 / 9.0;
+	cam.image_width = 1200;
+	cam.samples_per_pixel = 400;
+	cam.max_depth = 50;
+
+	cam.vfov = 20;
+	cam.lookfrom = point3(13, 2, 10);
+	cam.lookat = point3(0, 0, 0);
+	cam.vup = vec3(0, 1, 0);
+
+	cam.defocus_angle = 0;
+
+	cam.render(world);
+}
+
 int main() {
-	switch (3) {
+	switch (4) {
 		case 1:
 			bouncing_spheres();
 			break;
@@ -136,6 +169,9 @@ int main() {
 			break;
 		case 3:
 			moon();
+			break;
+		case 4:
+			moon_and_earth();
 			break;
 	}
 }
