@@ -5,6 +5,10 @@
 
 class quad : public hittable {
 	public:
+		/// <param name="Q">The corner point (origin) of the quad.</param>
+		/// <param name="u">The first edge vector defining the quad's width.</param>
+		/// <param name="v">The second edge vector defining the quad's height.</param>
+		/// <param name="mat">A shared pointer to the material applied to this quad surface.</param>
 		quad(const point3& Q, const vec3& u, const vec3& v, shared_ptr<material> mat) : Q(Q), u(u), v(v), mat(mat) {
 			auto n = cross(u, v);
 			normal = unit_vector(n);
